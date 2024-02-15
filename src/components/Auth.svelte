@@ -1,4 +1,6 @@
 <script>
+  import { authHandlers } from "../store/store";
+
   let email = "";
   let password = "";
   let confirmPassword = "";
@@ -6,10 +8,30 @@
   let register = false;
   let err = false;
 
-  const handleAuth = () => {
+  let isAuthenticating = false;
+
+  const handleAuth = async () => {
+    if (isAuthenticating) {
+      return;
+    }
+
     if (!email || !password || (register && !confirmPassword)) {
       err = true;
       return;
+    }
+
+    isAuthenticating = true;
+
+    try {
+      if (!register) {
+        await authHandlers.logIn(email, password);
+      } else {
+        await authHandlers.signUp(email, password);
+      }
+    } catch (error) {
+      console.log("There is an auth error", error);
+      err = true;
+      isAuthenticating = false;
     }
   };
 
@@ -24,7 +46,7 @@
       {register ? "Register" : "Login"}
     </h1>
     {#if err}
-      <p class="text-red font-semibold">Input not correct</p>
+      <p class="text-red font-bold text-center text-red-700">Input incorrect</p>
     {/if}
     <label
       for=""
@@ -94,8 +116,13 @@ absolute -translate-y-[50%] pointer-events-none text-white rounded-sm font-light
     {/if}
     <button
       type="button"
-      class="bg-lime-400 text-white border-none px-3 py-2 cursor-pointer rounded-md hover:bg-lime-600 duration-500"
-      >Submit</button
+      class="bg-lime-400 text-white border-none px-3 py-2 cursor-pointer rounded-md hover:bg-lime-600 duration-500 grid place-items-center"
+      on:click={handleAuth}
+      >{#if isAuthenticating}
+        <i class="fa-solid fa-spinner animate-spin"></i>
+      {:else}
+        Submit
+      {/if}</button
     >
   </form>
   <div class="p-2">
