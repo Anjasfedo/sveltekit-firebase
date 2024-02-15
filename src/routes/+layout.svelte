@@ -8,7 +8,7 @@
   const nonAuthRoutes = ["/"];
 
   onMount(() => {
-    console.log("Mount");
+    // console.log("Mount");
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       const currentPath = window.location.pathname;
 
@@ -28,7 +28,7 @@
 
       let dataToSetStore;
 
-      const docRef = doc(db, "users", user.uid);
+      const docRef = doc(db, "user", user.uid);
 
       const docSnap = await getDoc(docRef);
 
@@ -37,7 +37,7 @@
 
         dataToSetStore = {
           email: user.email,
-          todos: [],
+          data: { todos: [] },
         };
 
         await setDoc(userRef, dataToSetStore, { merge: true });
@@ -51,11 +51,13 @@
         return {
           ...curr,
           user,
-          data: dataToSetStore,
+          data: dataToSetStore.data,
           isLoading: false,
         };
       });
     });
+
+    return unsubscribe;
   });
 </script>
 

@@ -14,12 +14,12 @@
     if (isAuthenticating) {
       return;
     }
-    
+
     if (!email || !password || (register && !confirmPassword)) {
       err = true;
       return;
     }
-    
+
     isAuthenticating = true;
 
     try {
@@ -31,6 +31,7 @@
     } catch (error) {
       console.log("There is an auth error", error);
       err = true;
+      isAuthenticating = false;
     }
   };
 
