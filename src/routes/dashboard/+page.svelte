@@ -1,4 +1,6 @@
 <script>
+  import { authHandlers } from "../../store/store";
+
   let todoLists = ["Eating Geprek"];
 
   let currTodo = "";
@@ -44,6 +46,7 @@
       >
       <button
         class="hover:opacity-70 px-3 py-1 rounded-xl flex items-center gap-2"
+        on:click={authHandlers.logOut}
         ><i class="fa-solid fa-right-from-bracket"></i>
         <p>Logout</p></button
       >
